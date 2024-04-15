@@ -14,7 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public class App 
 {
-	static String configString = "metal/project/Config.xml";
+	//SPRING JDBC DRIVER and other Static codes
+    static String configString = "metal/project/Config.xml";
     
     static ApplicationContext context = new ClassPathXmlApplicationContext(configString);
     
@@ -23,12 +24,14 @@ public class App
     static Scanner scanner = new Scanner(System.in);
 	
     static String activeuser;
-    
+
+	//Main functions, Calls the Main Menu
     public static void main( String[] args )
     {
     	mainmenu();
     }
-    
+
+	//User Menu, After Successful Login
     public static void usermenu() {
     	boolean back = false;
 		while(!back) {
@@ -67,6 +70,8 @@ public class App
 				}
 		}
 	}
+
+	//Main Menu, Gets Called in Main function at Start
     public static void mainmenu() {
     	while (true) {
      	   System.out.println("\n\n\n\n=====MENU=====");
@@ -84,7 +89,8 @@ public class App
  	        String username = scanner.nextLine();
  	        System.out.print("Enter Password: ");
  	        String password = scanner.nextLine();
- 	        
+
+			// Password Check
  	        String retrivedPassword = getPassword(username);
  	        if(retrivedPassword==null) {
  	        	System.out.println("User or password incorrect!!!");
@@ -124,7 +130,8 @@ public class App
  	}
      	
     }
-    
+
+	// Register Function
     public static void setUser(String user,String pass,String name,String bio) {
     	String query = "insert into user values(?,?,?,?)";
     	int val =  template.update(query,user,pass,name,bio);
@@ -132,7 +139,8 @@ public class App
     		System.out.println("User Added Successfully");
     	}
 	}
-    
+
+	// Login Function, For Password Checking
     public static String getPassword(String username) {
 		String query = "select password from user where username=?";
 		String password = (String) template.queryForObject(
@@ -141,7 +149,8 @@ public class App
 		return password;
     	
 	}
-    
+
+	// Delete User Function
     public static void deleteUser() {
     	String query = "delete from user where username=?";
     	int val =  template.update(query,activeuser);
@@ -149,7 +158,8 @@ public class App
     		System.out.println("User Deleted Successfully");
     	}
 	}
-    
+
+	//Update Bio Function
     public static void updateUser(String bio) {
     	String query = "update user set bio=? where username=?";
     	int val =  template.update(query,bio,activeuser);
@@ -157,7 +167,8 @@ public class App
     		System.out.println("Bio Updated Successfully");
     	}
 	}
-    
+
+	// Show user Details Function
     public static User getUser() {
     	String query = "select * from user where username=?";
     	return template.queryForObject(query, new Object[]{activeuser}, (rs, rowNum) ->
